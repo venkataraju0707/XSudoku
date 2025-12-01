@@ -1,98 +1,59 @@
 import { useState } from "react";
 
 export default function App() {
-  const initialBoard = Array(9).fill("");
-  const [board, setBoard] = useState(initialBoard);
-  const [turn, setTurn] = useState("X");
+  // 9x9 empty board
+  const emptyBoard = Array(9).fill().map(() => Array(9).fill(""));
+  const [board, setBoard] = useState(emptyBoard);
 
-  const [scoreX, setScoreX] = useState(0);
-  const [scoreO, setScoreO] = useState(0);
-  const [draws, setDraws] = useState(0);
-
-  const handleClick = (index) => {
-    if (board[index] !== "") return;
-
-    const newBoard = [...board];
-    newBoard[index] = turn;
-    setBoard(newBoard);
-
-    checkWinner(newBoard);
-    setTurn(turn === "X" ? "O" : "X");
-  };
-
-  const checkWinner = (b) => {
-    const patterns = [
-      [0,1,2], [3,4,5], [6,7,8],  // rows
-      [0,3,6], [1,4,7], [2,5,8],  // columns
-      [0,4,8], [2,4,6],           // diagonals
-    ];
-
-    for (let p of patterns) {
-      const [a, b1, c] = p;
-      if (b[a] && b[a] === b[b1] && b[a] === b[c]) {
-        if (b[a] === "X") setScoreX(scoreX + 1);
-        else setScoreO(scoreO + 1);
-        restartRound();
-        return;
-      }
-    }
-
-    if (!b.includes("")) {
-      setDraws(draws + 1);
-      restartRound();
+  const handleChange = (row, col, value) => {
+    if (value === "" || /^[1-9]$/.test(value)) {
+      const newBoard = board.map(r => [...r]);
+      newBoard[row][col] = value;
+      setBoard(newBoard);
     }
   };
 
-  const restartRound = () => {
-    setBoard(initialBoard);
-    setTurn("X");
+  const clearBoard = () => {
+    setBoard(emptyBoard);
   };
 
-  const resetAll = () => {
-    setScoreX(0);
-    setScoreO(0);
-    setDraws(0);
-    restartRound();
+  const validateBoard = () => {
+    alert("Validation logic can be added later!");
   };
 
   return (
-    <div className="game-container">
-      {/* INLINE CSS */}
+    <div className="container">
+      {/* Inline CSS */}
       <style>{`
-        .game-container {
-          width: 360px;
+        .container {
+          width: 420px;
           margin: 40px auto;
           text-align: center;
           font-family: Arial, sans-serif;
         }
 
-        h1 { margin-bottom: 10px; }
+        h1 {
+          margin-bottom: 5px;
+        }
 
-        .scores {
-          display: flex;
-          justify-content: space-between;
+        p {
           margin-bottom: 20px;
-          font-size: 18px;
+          color: #444;
         }
 
         .board {
           display: grid;
-          grid-template-columns: repeat(3, 100px);
-          gap: 5px;
-          justify-content: center;
-          margin-bottom: 20px;
+          grid-template-columns: repeat(9, 40px);
+          gap: 2px;
+          margin: 20px auto;
         }
 
         .cell {
-          width: 100px;
-          height: 100px;
-          background: #f0f0f0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 40px;
-          cursor: pointer;
-          border-radius: 6px;
+          width: 40px;
+          height: 40px;
+          font-size: 20px;
+          text-align: center;
+          border: 1px solid #333;
         }
 
         button {
@@ -105,34 +66,35 @@ export default function App() {
           border-radius: 5px;
         }
 
-        button:hover { opacity: 0.8; }
+        button:hover {
+          opacity: 0.85;
+        }
       `}</style>
 
-      <h1>Tic-Tac-Toe</h1>
+      {/* Title */}
+      <h1>Sudoku Validator</h1>
 
-      {/* SCORES */}
-      <div className="scores">
-        <span>X: {scoreX}</span>
-        <span>Draws: {draws}</span>
-        <span>O: {scoreO}</span>
-      </div>
+      {/* Description */}
+      <p>Enter numbers 1-9 and validate the board.</p>
 
-      {/* BOARD */}
+      {/* Sudoku Board */}
       <div className="board">
-        {board.map((val, index) => (
-          <div
-            key={index}
-            className="cell"
-            onClick={() => handleClick(index)}
-          >
-            {val}
-          </div>
-        ))}
+        {board.map((row, rIndex) =>
+          row.map((val, cIndex) => (
+            <input
+              key={`${rIndex}-${cIndex}`}
+              className="cell"
+              maxLength={1}
+              value={val}
+              onChange={(e) => handleChange(rIndex, cIndex, e.target.value)}
+            />
+          ))
+        )}
       </div>
 
-      {/* BUTTONS */}
-      <button onClick={restartRound}>Restart Round</button>
-      <button onClick={resetAll}>Reset All</button>
+      {/* Buttons */}
+      <button onClick={validateBoard}>Validate</button>
+      <button onClick={clearBoard}>Clear</button>
     </div>
   );
 }
