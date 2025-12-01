@@ -1,8 +1,7 @@
 import { useState } from "react";
 
 export default function App() {
-  // 9x9 empty board
-  const emptyBoard = Array(9).fill().map(() => Array(9).fill(""));
+   const emptyBoard = Array(9).fill().map(() => Array(9).fill(""));
   const [board, setBoard] = useState(emptyBoard);
 
   const handleChange = (row, col, value) => {
@@ -23,8 +22,7 @@ export default function App() {
 
   return (
     <div className="container">
-      {/* Inline CSS */}
-      <style>{`
+       <style>{`
         .container {
           width: 420px;
           margin: 40px auto;
@@ -71,14 +69,11 @@ export default function App() {
         }
       `}</style>
 
-      {/* Title */}
-      <h1>Sudoku Validator</h1>
+       <h1>Sudoku Validator</h1>
 
-      {/* Description */}
-      <p>Enter numbers 1-9 and validate the board.</p>
+       <p>Enter numbers 1-9 and validate the board.</p>
 
-      {/* Sudoku Board */}
-      <div className="board">
+       <div className="board">
         {board.map((row, rIndex) =>
           row.map((val, cIndex) => (
             <input
@@ -92,8 +87,7 @@ export default function App() {
         )}
       </div>
 
-      {/* Buttons */}
-      <button onClick={validateBoard}>Validate</button>
+       <button onClick={validateBoard}>Validate</button>
       <button onClick={clearBoard}>Clear</button>
     </div>
   );
